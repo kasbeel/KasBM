@@ -86,7 +86,7 @@ namespace {
 
     void append_include_flags(std::string &includes, const std::vector<std::string> &include_dirs) {
         for (const auto &dir : include_dirs) {
-            KasUtils::append_spaced(includes, "-I" + dir);
+            includes += " -I" + dir;
         }
     }
 

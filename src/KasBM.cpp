@@ -25,10 +25,23 @@ SOFTWARE.
 #include <KasLog.hpp>
 #include <KasProjectConfig.hpp>
 #include <KasRun.hpp>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 
 using namespace KasProjectConfig;
+
+void check_dependencies() {
+    if (std::system("pkg-config --version > /dev/null 2>&1") != 0) {
+        KasLog::log(KasLog::Level::ERR,
+            "pkg-config no está instalado y es requerido por kasbm.");
+        std::cerr
+            << "  Debian/Ubuntu : sudo apt install pkgconf\n"
+            << "  Fedora/RHEL   : sudo dnf install pkgconf\n"
+            << "  Arch          : sudo pacman -S pkgconf\n";
+        std::exit(1);
+    }
+}
 
 void print_help() {
     std::cout << R"(
@@ -97,6 +110,7 @@ CliArgs parse_args(int argc, char *argv[]) {
 
 int main(int argc, char *argv[]) {
 
+    check_dependencies();
     CliArgs args = parse_args(argc, argv);
     std::ifstream file("kas_package.json");
 
